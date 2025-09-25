@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   metadata:
     guid: 4d55a9f2585744c4ade80afbe87c7801
-    name: AnyResolution
+    name: UltraWide
     skipSafetyChecks: 1
     disableScripts: 0
     accessesExtraAssemblies: 1
@@ -23,7 +23,7 @@ MonoBehaviour:
     files:
     - path: Scripts/main.anyresolution.mod.cs
     dependencies: []
-  modPath: Assets\AnyResolution
+  modPath: Assets\UltraWide
   forceReimport: 0
   buildBundles: 0
   cacheBundles: 0
