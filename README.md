@@ -1,5 +1,5 @@
 # About
-Ultrawide support to Core Keeper allowing 21:9 -- 16:10 resolutions, some visual glitches are still visible
+Ultrawide support for Core Keeper, play in 21:9 -- 16:10 resolutions, some visual glitches are still visible
 
 [Available at mod.io](https://mod.io/g/corekeeper/m/sashiri-ultrawide#description)
 
