@@ -19,7 +19,7 @@ MonoBehaviour:
     disableScripts: 0
     accessesExtraAssemblies: 1
     disableHarmonyPatching: 0
-    requiredOn: -1
+    requiredOn: 0
     files:
     - path: Scripts/main.anyresolution.mod.cs
     dependencies: []
