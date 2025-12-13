@@ -1,4 +1,5 @@
 using HarmonyLib;
+using Pug.RP;
 using PugMod;
 using System;
 using System.Collections.Generic;
@@ -95,7 +96,7 @@ namespace Sashiri
 
     public class UltraWide : IMod
     {
-        private Pug.RP.OutputMode og_outputMode;
+        private const float ASPECT_16_9 = 16f / 9f;
 
         public void EarlyInit()
         {
@@ -103,22 +104,62 @@ namespace Sashiri
 
         public void Init()
         {
-            var camera = API.Rendering.GameCamera;
-            og_outputMode = camera.GetOutputMode();
-            camera.SetPreferredOutputMode(Pug.RP.OutputMode.MatchAspect);
+            SetupCameraPreferences(API.Rendering.GameCamera);
+            SetupCameraPreferences(API.Rendering.UICamera);
+            DisableMenuBorders();
         }
 
         public void ModObjectLoaded(UnityEngine.Object obj) { }
 
         public void Shutdown()
         {
-            API.Rendering.GameCamera.SetPreferredOutputMode(og_outputMode);
         }
 
         public void Update()
         {
+            // Game camera has it's own ortho size calculation,
+            // and I'm not gonna touch it because I don't know what they really
+            // needed it for
+            UpdateCamera(API.Rendering.GameCamera, false);
+            UpdateCamera(API.Rendering.UICamera);
+        }
+        public bool CanBeUnloaded() => false;
+
+        private void SetupCameraPreferences(PugCamera camera)
+        {
+            camera.SetPreferredOutputMode(OutputMode.MatchAspect);
+            camera.minOutputWidth = camera.outputWidth;
         }
 
-        public bool CanBeUnloaded() => true;
+        private void UpdateCamera(PugCamera pugCamera, bool updateOrthographicSize = true)
+        {
+            if (pugCamera == null || pugCamera.outputWidth == 0)
+                return;
+
+            var srcCamera = pugCamera.camera;
+            var aspect = UnityEngine.Mathf.Min(srcCamera.pixelRect.width / srcCamera.pixelRect.height, ASPECT_16_9);
+
+            float scaledHeight = pugCamera.outputWidth / aspect;
+            var height = (int)scaledHeight;
+            if (height % 2 != 0)
+            {
+                height += 1;
+            }
+            pugCamera.outputHeight = height;
+
+            if (updateOrthographicSize)
+            {
+                pugCamera.camera.orthographicSize = scaledHeight / 32;
+            }
+        }
+
+        private void DisableMenuBorders()
+        {
+            var pauseMenuBorders = Manager.menu.pauseMenu.transform.Find("borders");
+            if (pauseMenuBorders != null)
+            {
+                pauseMenuBorders.gameObject.SetActive(false);
+            }
+        }
     }
 }
